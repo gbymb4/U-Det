@@ -1,4 +1,4 @@
-from bifpn import build_BiFPN
+from .bifpn import build_BiFPN
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Model

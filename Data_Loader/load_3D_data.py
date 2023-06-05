@@ -25,7 +25,7 @@ plt.ioff()
 
 
 
-from custom_data_aug import elastic_transform, salt_pepper_noise
+from Custom_Functions import elastic_transform, salt_pepper_noise
 
 debug = 0
 
@@ -57,7 +57,10 @@ def compute_class_weights(root, train_data_list):
     pos = 0.0
     neg = 0.0
     for img_name in tqdm(train_data_list):
-        img = np.load(join(root, 'masks', 'masks_'+img_name[0])).T
+        if img_name == []: 
+            continue
+        
+        img = np.load(join(root, img_name[0]))['img'].T
         for slic in img:
             if not np.any(slic):
                 continue
@@ -84,8 +87,9 @@ def load_class_weights(root, split):
 
 def split_data(root_path, num_splits):
     mask_list = []
-    for ext in ('*.mhd', '*.hdr', '*.nii','*.npy'):
-        mask_list.extend(sorted(glob(join(root_path,'masks',ext))))
+    for ext in ('*.mhd', '*.hdr', '*.nii','*.npy', '*.npz'):
+        #mask_list.extend(sorted(glob(join(root_path,'masks',ext))))
+        mask_list.extend(sorted(glob(join(root_path,ext))))
 
     assert len(mask_list) != 0, 'Unable to find any files in {}'.format(join(root_path,'masks'))
 
@@ -139,7 +143,7 @@ def convert_data_to_numpy(root_path, img_name, no_masks=False, overwrite=False):
 
     if not overwrite:
         try:
-            with np.load(join(numpy_path, fname + '.npz')) as data:
+            with np.load(join(root_path, fname + '.npz')) as data:
                 return data['img'], data['mask']
         except:
             pass
@@ -317,12 +321,15 @@ def generate_train_batches(root_path, train_list, net_input_shape, net, batchSiz
                 train_mask = np.load(path_to_np_mask).T
                 train_mask = train_mask[:,:,np.newaxis]
             except:
-                print('\nPre-made numpy array not found for {}.\nCreating now...'.format(scan_name[:-4]))
+                if scan_name == []:
+                    continue
+                #print('\nPre-made numpy array not found for {}.\nCreating now...'.format(scan_name[:-4]))
+                print(f'Loading file {scan_name}...')
                 train_img, train_mask = convert_data_to_numpy(root_path, scan_name)
                 if np.array_equal(train_img,np.zeros(1)):
                     continue
                 else:
-                    print('\nFinished making npz file.')
+                    ...#print('\nFinished making npz file.')
 
             if numSlices == 1:
                 subSampAmt = 0

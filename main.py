@@ -13,8 +13,8 @@ from time import gmtime, strftime
 time = strftime("%Y-%m-%d-%H:%M:%S", gmtime())
 import numpy as np
 
-from load_3D_data import load_data, split_data
-from model_helper import create_model
+from Data_Loader import load_data, split_data
+from Model_Helpers import create_model
 
 
 def main(args):
@@ -30,7 +30,7 @@ def main(args):
         train_list, val_list, test_list = load_data(args.data_root_dir, args.split_num)
 
     # Get image properties from first image. Assume they are all the same.
-    image = np.load(join(args.data_root_dir, 'imgs', 'images_'+train_list[0][0])).T
+    image = np.load(join(args.data_root_dir, train_list[0][0]))['img']
     image = image[np.newaxis,:,:]
     img_shape = image.shape
     net_input_shape = (img_shape[1], img_shape[2], args.slices)

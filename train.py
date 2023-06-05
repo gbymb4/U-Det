@@ -18,8 +18,8 @@ K.set_image_data_format('channels_last')
 from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, ReduceLROnPlateau, TensorBoard
 import tensorflow as tf
 
-from custom_losses import dice_hard, weighted_binary_crossentropy_loss, dice_loss, margin_loss
-from load_3D_data import load_class_weights, generate_train_batches, generate_val_batches
+from Custom_Functions import dice_hard, weighted_binary_crossentropy_loss, dice_loss, margin_loss
+from Data_Loader import load_class_weights, generate_train_batches, generate_val_batches
 
 
 def get_loss(root, split, net, choice):

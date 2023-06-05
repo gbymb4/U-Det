@@ -7,7 +7,7 @@ def create_model(args, input_shape):
     # If using CPU or single GPU
     if args.gpus <= 1:
         if args.net == 'udet':
-            from UDet import UDet
+            from Models import UDet
             model = UDet(input_shape)
             return [model]
         if args.net == 'bifpn':
